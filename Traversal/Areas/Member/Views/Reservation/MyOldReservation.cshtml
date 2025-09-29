@@ -1,0 +1,37 @@
+﻿@using EntityLayer.Concrete
+@model List<Reservation>
+
+@{
+    ViewData["Title"] = "MyOldReservation";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+@if (Model.Count < 1)
+{
+    <h1>Rezervasyon Bulunmamaktadır.</h1>
+}
+else
+{
+    <h1>Geçmiş Rezervasyonlar</h1>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Lokasyon</th>
+            <th>Kişi Sayısı</th>
+            <th>Rezervasyon</th>
+            <th>Durum</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ReservationID</td>
+                <td>@item.Destination.City</td>
+                <td>@item.PersonCount</td>
+                <td>@item.ReservationDate</td>
+                <td>@item.Status</td>
+            </tr>
+        }
+    </table>
+}
+
