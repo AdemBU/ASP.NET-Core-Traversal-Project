@@ -48,6 +48,16 @@ namespace BusinessLayer.Concrete
             return _commentDal.GetList();
         }
 
+        public List<Comment> TGetListCommentWithDestination()
+        {
+            return _commentDal.GetListCommentWithDestination();
+        }
+
+        public List<Comment> TGetListCommentWithDestinationAndUser(int id)
+        {
+            return _commentDal.GetListCommentWithDestinationAndUser(id);
+        }
+
         public void TUpdate(Comment t)
         {
             throw new NotImplementedException();

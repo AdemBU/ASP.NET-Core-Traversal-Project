@@ -13,7 +13,7 @@ namespace Traversal.Controllers
         [HttpGet]
         public PartialViewResult AddComment(int id)
         {
-            ViewBag.i = id;
+            ViewBag.destID = id;
             return PartialView();
         }
         [HttpPost]
