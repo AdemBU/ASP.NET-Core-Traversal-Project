@@ -70,7 +70,7 @@ namespace Traversal
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LogoutPath = "/Login/SignIn/";
+                options.LoginPath = "/Login/SignIn/";
             });
         }
 
