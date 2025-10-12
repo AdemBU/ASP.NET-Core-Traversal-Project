@@ -69,5 +69,6 @@ namespace Traversal.Areas.Member.Controllers
             TempData["ReservationMessage"] = "Rezervasyonunuz onay bekliyor.";
             return RedirectToAction("MyCurrentReservation");
         }
+
     }
 }
