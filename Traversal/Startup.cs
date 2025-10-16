@@ -131,6 +131,8 @@ namespace Traversal
             app.UseAuthentication();
             app.UseRouting();
 
+            
+
             app.UseAuthorization();
 
             var suppertedCultures = new[] { "en", "fr", "es", "gr", "tr", "de" };

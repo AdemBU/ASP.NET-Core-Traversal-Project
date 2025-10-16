@@ -2,10 +2,10 @@
 
 namespace Traversal.Controllers
 {
-    public class ErrorPageController : Controller
+    [Route("About/Index")]
+    public class AboutController : Controller
     {
-
-        public IActionResult Error404(int code)
+        public IActionResult Index()
         {
             return View();
         }
