@@ -6,11 +6,16 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 using System.IO;
 using Traversal.CQRS.Handlers.DestinationHandlers;
 using Traversal.Models;
@@ -45,7 +50,7 @@ namespace Traversal
             });
 
             services.AddDbContext<Context>();
-            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().AddErrorDescriber<CustomIdentityValidator>().AddEntityFrameworkStores<Context>();   // 31. derstte yazdýk (CustomIdentityValidator)
+            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<Context>().AddErrorDescriber<CustomIdentityValidator>().AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider).AddEntityFrameworkStores<Context>();   // 31. derstte yazdýk (CustomIdentityValidator)
 
             services.AddHttpClient();
 
@@ -66,12 +71,41 @@ namespace Traversal
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            services.AddMvc();
-
-            services.ConfigureApplicationCookie(options =>
+            services.AddLocalization(opt =>
             {
-                options.LoginPath = "/Login/SignIn/";
+                opt.ResourcesPath = "Resources";
             });
+
+            services.AddMvc().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix).AddDataAnnotationsLocalization();
+            //services.Configure<RequestLocalizationOptions>(options =>
+            //{
+            //    var supportedCultures = new[]
+            //    {
+            //    new CultureInfo("tr"),
+            //    new CultureInfo("en"),
+            //    new CultureInfo("fr")
+            //};
+
+            //    options.DefaultRequestCulture = new RequestCulture("en");
+            //    options.SupportedCultures = supportedCultures;
+            //    options.SupportedUICultures = supportedCultures;
+            //    options.FallBackToParentUICultures = true;
+
+            //    // Ýsteðe baðlý: Kendi provider'larýný belirtmek istersen buraya ekleyebilirsin
+            //    options.RequestCultureProviders.Clear();
+            //});
+
+            //    // MVC ya da Razor Pages varsa
+            //    services.AddControllersWithViews()
+            //            .AddViewLocalization()
+            //            .AddDataAnnotationsLocalization();
+
+
+
+            //    services.ConfigureApplicationCookie(options =>
+            //        {
+            //            options.LoginPath = "/Login/SignIn/";
+            //        });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,6 +132,12 @@ namespace Traversal
             app.UseRouting();
 
             app.UseAuthorization();
+
+            var suppertedCultures = new[] { "en", "fr", "es", "gr", "tr", "de" };
+            var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(suppertedCultures[1]).AddSupportedCultures(suppertedCultures).AddSupportedUICultures(suppertedCultures);
+            app.UseRequestLocalization(localizationOptions);
+            //var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            //app.UseRequestLocalization(locOptions.Value);
 
             app.UseEndpoints(endpoints =>
             {
